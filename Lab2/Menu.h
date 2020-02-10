@@ -19,7 +19,11 @@ public:
 
     void show();
 
+    void show(string message);
+
     void show(map<string, string> options);
+
+    void show(map<string, string> options, string message);
 
     vector<string> ask();
 

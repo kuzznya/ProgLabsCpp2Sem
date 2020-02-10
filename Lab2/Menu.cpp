@@ -10,7 +10,12 @@ Menu::Menu(map<string, string> options) {
 }
 
 void Menu::show() {
+    show("");
+}
+
+void Menu::show(string message) {
     cout << string( 100, '\n' );
+    cout << message << endl;
     cout << "=== MENU ===" << endl;
     cout << "Commands:" << endl;
     for (auto &el : options) {
@@ -22,8 +27,12 @@ void Menu::show() {
 }
 
 void Menu::show(map<string, string> options) {
+    show(options, "");
+}
+
+void Menu::show(map<string, string> options, string message) {
     this->options = options;
-    show();
+    show(message);
 }
 
 vector<string> Menu::ask() {

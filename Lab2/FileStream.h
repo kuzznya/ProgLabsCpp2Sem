@@ -16,11 +16,11 @@ public:
 
     ~FileStream();
 
-    void open();
+    bool open();
 
-    void open(string name);
+    bool open(string name);
 
-    void close();
+    bool close();
 
     string getName();
 

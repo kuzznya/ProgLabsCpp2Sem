@@ -24,13 +24,17 @@ int main() {
                 cout << "No <file name> argument" << endl;
                 continue;
             }
-            fs.open(answer[1]);
-            options = {make_pair("close", "Close file, opened previously"),
-                       make_pair("read_str", "Read string from an opened file"),
-                       make_pair("read_word", "Read word from an opened file"),
-                       make_pair("exit", "Exit the program"),
-                       make_pair("menu", "Show menu")};
-            menu.show(options);
+            if (fs.open(answer[1])) {
+                options = {make_pair("close", "Close file, opened previously"),
+                           make_pair("read_str", "Read string from an opened file"),
+                           make_pair("read_word", "Read word from an opened file"),
+                           make_pair("exit", "Exit the program"),
+                           make_pair("menu", "Show menu")};
+                menu.show(options);
+            }
+            else {
+                menu.show("Error while trying to open");
+            }
         }
         else if (answer[0] == "close") {
             fs.close();

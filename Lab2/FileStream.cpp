@@ -5,8 +5,7 @@ FileStream::FileStream() {
 }
 
 FileStream::FileStream(string name) {
-    this->name = name;
-    inputf.open(name);
+    open(name);
 }
 
 FileStream::~FileStream(){
@@ -14,16 +13,24 @@ FileStream::~FileStream(){
         inputf.close();
 }
 
-void FileStream::open(string name) {
+bool FileStream::open() {
+    return open(name);
+}
+
+bool FileStream::open(string name) {
     if (inputf.is_open())
         inputf.close();
     inputf.open(name);
     this->name = name;
+    return inputf.is_open();
 }
 
-void FileStream::close() {
-    if (inputf.is_open())
+bool FileStream::close() {
+    if (inputf.is_open()) {
         inputf.close();
+        return true;
+    }
+    return false;
 }
 
 string FileStream::getName() {
