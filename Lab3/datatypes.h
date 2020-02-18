@@ -24,8 +24,44 @@ public:
 
     explicit operator double();
 
-    explicit operator string();
+    explicit operator std::string();
 
     std::string toString();
+};
+
+//Task 6
+class IntArray {
+private:
+    int* array;
+    int size;
+
+public:
+    IntArray();
+
+    explicit IntArray(int size);
+
+    IntArray(IntArray const &prevArray);
+
+    ~IntArray();
+
+    int getSize() const;
+
+    void push_back(int value);
+
+    void resize(int newSize);
+
+    int& operator [] (int idx);
+
+    IntArray operator + (IntArray array2);
+
+    bool operator == (const IntArray& array2);
+
+    bool operator > (const IntArray& array2);
+
+    bool operator < (const IntArray& array2);
+
+    bool operator != (const IntArray& array2);
+
+    explicit operator std::string();
 };
 
