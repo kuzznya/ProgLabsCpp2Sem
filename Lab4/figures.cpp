@@ -1,0 +1,103 @@
+#include "figures.h"
+
+#include <cmath>
+#include <iostream>
+
+Disk::Disk() {
+    mass_ = 0;
+    R_ = 0;
+}
+
+Disk::Disk(Vector2D position, double radius, double mass)
+    :position_(position), R_(radius), mass_(mass) {}
+
+Disk::~Disk() = default;
+
+double Disk::square() const {
+    return M_PI * R_ * R_;
+}
+
+double Disk::perimeter() const {
+    return 2 * M_PI * R_;
+}
+
+double Disk::mass() const {
+    return mass_;
+}
+
+Vector2D Disk::position() const {
+    return position_;
+}
+
+double Disk::radius() const {
+    return R_;
+}
+
+bool Disk::operator==(const IPhysObject &other) const {
+    return mass_ == other.mass();
+}
+
+bool Disk::operator<(const IPhysObject &other) const {
+    return mass_ < other.mass();
+}
+
+void Disk::draw() const {
+    std::cout << "=== " << classname_ << " ===" << std::endl;
+    std::cout << "Center position: (" << position_.x << ", " << position_.y << ")" << std::endl;
+    std::cout << "Radius: " << R_ << std::endl;
+    std::cout << "Mass: " << mass_ << std::endl;
+}
+
+void Disk::initFromDialog() {
+    std::cout << "Enter position of the center of the disk (x, y): ";
+    std::cin >> position_.x >> position_.y;
+    std::cout << "Enter radius: ";
+    std::cin >> R_;
+    std::cout << "Enter mass: ";
+    std::cin >> mass_;
+    std::cout << "Initialization completed" << std::endl;
+}
+
+const char *Disk::classname() const {
+    return classname_;
+}
+
+unsigned int Disk::size() const {
+    return sizeof(*this);
+}
+
+IsoscelesTrapezoid::IsoscelesTrapezoid() = default;
+
+IsoscelesTrapezoid::IsoscelesTrapezoid(Vector2D A, Vector2D B, Vector2D C)
+    :A_(A), B_(B), C_(C) {}
+
+IsoscelesTrapezoid::~IsoscelesTrapezoid() = default;
+
+double IsoscelesTrapezoid::square() const {
+    return (largerParallelEdge() + smallerParallelEdge()) / 2.0 * height();
+}
+
+double IsoscelesTrapezoid::height() const {
+    return sqrt(pow(nonParallelEdge(), 2) + pow(largerParallelEdge() - smallerParallelEdge(), 2));
+}
+
+double IsoscelesTrapezoid::perimeter() const {
+    return largerParallelEdge() + smallerParallelEdge() + nonParallelEdge() * 2;
+}
+
+double IsoscelesTrapezoid::mass() const {
+    return mass_;
+}
+
+Vector2D IsoscelesTrapezoid::position() const {
+    return A_;
+}
+
+double IsoscelesTrapezoid::largerParallelEdge() const {
+    return sqrt(pow(B_.x - A_.x, 2) + pow(B_.y - B_.x, 2));
+}
+
+double IsoscelesTrapezoid::smallerParallelEdge() const {
+    // TODO
+    return 0;
+}

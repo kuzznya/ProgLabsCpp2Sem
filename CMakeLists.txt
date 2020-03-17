@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 project(ProgLabsCpp2Sem)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
-add_executable(ProgLabsCpp2Sem  Lab3/datatypes.h Lab3/datatypes.cpp Lab3/main.cpp)
+add_executable(ProgLabsCpp2Sem Lab4/base.h Lab4/main.cpp Lab4/figures.cpp Lab4/figures.h Lab4/isosceles_trapezoid.cpp Lab4/isosceles_trapezoid.h Lab4/IFigure.h)
