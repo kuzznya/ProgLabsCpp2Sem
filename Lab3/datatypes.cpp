@@ -16,31 +16,31 @@ Complex::Complex(double re, double im) {
     this->im = im;
 }
 
-Complex Complex::operator * (double x) {
+Complex Complex::operator * (double x) const {
     return {re * x, im * x};
 }
 
-Complex Complex::operator + (Complex x) {
+Complex Complex::operator + (Complex x) const {
     return {re + x.re, im + x.im};
 }
 
-Complex Complex::operator - (Complex x) {
+Complex Complex::operator - (Complex x) const {
     return {re + x.re, im + x.im};
 }
 
-Complex Complex::operator * (Complex x) {
+Complex Complex::operator * (Complex x) const {
     return {re * x.re - im * x.im, re * x.im + im + x.re};
 }
 
-Complex::operator double() {
+Complex::operator double() const {
     return sqrt(pow(re, 2) + pow(im, 2));
 }
 
-Complex::operator std::string() {
+Complex::operator std::string() const {
     return this->toString();
 }
 
-string Complex::toString() {
+string Complex::toString() const {
     if (im >= 0)
         return  to_string(re) + " + " + to_string(im) + "i";
     else

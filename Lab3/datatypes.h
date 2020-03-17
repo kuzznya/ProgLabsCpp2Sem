@@ -14,19 +14,19 @@ public:
 
     Complex(double re, double im);
 
-    Complex operator * (double x);
+    Complex operator * (double x) const;
 
-    Complex operator + (Complex x);
+    Complex operator + (Complex x) const;
 
-    Complex operator - (Complex x);
+    Complex operator - (Complex x) const;
 
-    Complex operator * (Complex x);
+    Complex operator * (Complex x) const;
 
-    explicit operator double();
+    explicit operator double() const;
 
-    explicit operator std::string();
+    explicit operator std::string() const;
 
-    std::string toString();
+    std::string toString() const;
 };
 
 //Task 6
