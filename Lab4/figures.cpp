@@ -49,6 +49,7 @@ void Disk::draw() const {
 }
 
 void Disk::initFromDialog() {
+    std::cout << "Initialization of the " << classname_ << " started" << std::endl;
     std::cout << "Enter position of the center of the disk (x, y): ";
     std::cin >> position_.x >> position_.y;
     std::cout << "Enter radius: ";
@@ -68,8 +69,8 @@ unsigned int Disk::size() const {
 
 IsoscelesTrapezoid::IsoscelesTrapezoid() = default;
 
-IsoscelesTrapezoid::IsoscelesTrapezoid(Vector2D A, Vector2D B, Vector2D C)
-    :A_(A), B_(B), C_(C) {}
+IsoscelesTrapezoid::IsoscelesTrapezoid(Vector2D A, Vector2D B, Vector2D C, Vector2D D)
+    :A_(A), B_(B), C_(C), D_(D) {}
 
 IsoscelesTrapezoid::~IsoscelesTrapezoid() = default;
 
@@ -90,14 +91,65 @@ double IsoscelesTrapezoid::mass() const {
 }
 
 Vector2D IsoscelesTrapezoid::position() const {
-    return A_;
+    return {(A_.x + B_.x + C_.x + D_.x) / 4.0, (A_.y + B_.y + C_.y + D_.y) / 4.0};
 }
 
 double IsoscelesTrapezoid::largerParallelEdge() const {
-    return sqrt(pow(B_.x - A_.x, 2) + pow(B_.y - B_.x, 2));
+    return sqrt(pow(B_.x - A_.x, 2) + pow(B_.y - A_.y, 2));
 }
 
 double IsoscelesTrapezoid::smallerParallelEdge() const {
-    // TODO
-    return 0;
+    return sqrt(pow(D_.x - C_.x, 2) + pow(D_.y - C_.y, 2));;
+}
+
+double IsoscelesTrapezoid::nonParallelEdge() const {
+    return sqrt(pow(B_.x - A_.x, 2) + pow(B_.y - A_.y, 2));
+}
+
+bool IsoscelesTrapezoid::operator==(const IPhysObject &other) const {
+    return mass_ == other.mass();
+}
+
+bool IsoscelesTrapezoid::operator<(const IPhysObject &other) const {
+    return mass_ < other.mass();
+}
+
+void IsoscelesTrapezoid::draw() const {
+    std::cout << "=== " << classname_ << " ===" << std::endl;
+    std::cout << "Left lower corner position (x, y): (" << A_.x << ", " << A_.y << ")" << std::endl;
+    std::cout << "Mass is: " << mass_ << std::endl;
+}
+
+void IsoscelesTrapezoid::initFromDialog() {
+    std::cout << "Initialization of the " << classname_ << " started" << std::endl;
+    std::cout << "Enter left lower point (x, y): ";
+    std::cin >> A_.x >> A_.y;
+    std::cout << "Enter right lower point (x, y): ";
+    std::cin >> B_.x >> B_.y;
+    std::cout << "Enter left upper point (x, y): ";
+    std::cin >> C_.x >> C_.y;
+    std::cout << "Enter right upper point (x, y): ";
+    std::cin >> D_.x >> D_.y;
+    std::cout << "Initialization completed" << std::endl;
+}
+
+const char *IsoscelesTrapezoid::classname() const {
+    return classname_;
+}
+
+unsigned int IsoscelesTrapezoid::size() const {
+    return sizeof(*this);
+}
+
+IFigure *FigureFactory::createFigure(FigureFactory::Figures fig) {
+    if (fig == DiskFigure) {
+        Disk* disk = new Disk();
+        disk->initFromDialog();
+        return disk;
+    } else if (fig == IsoscelesTrapezoidFigure) {
+        IsoscelesTrapezoid* trap = new IsoscelesTrapezoid();
+        trap->initFromDialog();
+        return trap;
+    }
+    return nullptr;
 }

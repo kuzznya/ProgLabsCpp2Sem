@@ -38,7 +38,7 @@ private:
 class IsoscelesTrapezoid : public IFigure {
 public:
     IsoscelesTrapezoid();
-    IsoscelesTrapezoid(Vector2D, Vector2D, Vector2D);
+    IsoscelesTrapezoid(Vector2D, Vector2D, Vector2D, Vector2D);
     ~IsoscelesTrapezoid();
 
     double square() const override;
@@ -61,7 +61,17 @@ public:
     unsigned int size() const override;
 
 private:
-    Vector2D A_ {}, B_ {}, C_ {};
+    Vector2D A_ {}, B_ {}, C_ {}, D_ {};
     double mass_ {};
     const char* classname_ = "Isosceles trapezoid";
+};
+
+class FigureFactory {
+public:
+    enum Figures {
+        DiskFigure,
+        IsoscelesTrapezoidFigure
+    };
+
+    static IFigure* createFigure(Figures fig);
 };
