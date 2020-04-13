@@ -18,7 +18,8 @@ public:
         data = new T[n * m];
     }
 
-    Matrix(Matrix<T>& other) : n(other.n), m(other.m) {
+    Matrix(const Matrix<T>& other) : n(other.n), m(other.m) {
+        data = new T[n * m];
         for (int i = 0; i < n * m; i++)
             data[i] = other.data[i];
     }
@@ -26,6 +27,19 @@ public:
     ~Matrix() {
         if (data != nullptr)
             delete[] data;
+    }
+
+    const bool operator == (const Matrix& other) const {
+        if (n != other.n || m != other.m)
+            return false;
+        for (int i = 0; i < n * m; i++)
+            if (data[i] != other.data[i])
+                return false;
+        return true;
+    }
+
+    const bool operator != (const Matrix& other) const {
+        return !(*this == other);
     }
 
     T& get(int i, int j) {
