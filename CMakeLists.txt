@@ -3,4 +3,4 @@ project(ProgLabsCpp2Sem)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(ProgLabsCpp2Sem Lab4/base.h Lab4/main.cpp Lab4/figures.cpp Lab4/figures.h Lab4/figure_system.cpp Lab4/figure_system.h Lab4/Menu.h Lab4/Menu.cpp)
+add_executable(ProgLabsCpp2Sem Lab5/swap.h Lab5/main.cpp Lab5/matrix.h Lab5/matrix_exceptions.h)
