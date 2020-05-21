@@ -272,6 +272,8 @@ public:
             end_->is_end = true;
         }
 
+        start_->prev->is_end = false;
+        start_->prev->prev->is_end = true;
         start_->prev->value = value;
         start_ = start_->prev;
     }

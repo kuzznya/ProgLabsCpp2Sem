@@ -6,10 +6,10 @@ int main() {
     std::cin >> capacity >> cur_size;
     circular_buffer<int> buffer(capacity);
     for (int i = 0; i < cur_size; i++) {
-//        int value;
-//        std::cin >> value;
-//        buffer.push_front(value);
-        std::cin >> buffer;
+        int value;
+        std::cin >> value;
+        buffer.push_front(value);
+//        std::cin >> buffer;
         buffer.print_all();
     }
 
