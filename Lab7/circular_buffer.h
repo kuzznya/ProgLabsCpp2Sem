@@ -35,6 +35,14 @@ public:
         return *this;
     }
 
+    inline T& operator * () const {
+        return ptr_->value;
+    }
+
+    inline T* operator -> () const {
+        return *(ptr_->value);
+    }
+
     inline buffer_iterator<T>& operator += (const int& val) {
         for (int i = 0; i < val; i++)
             ptr_ = ptr_->next;
@@ -46,17 +54,6 @@ public:
             ptr_ = ptr_->prev;
         return *this;
     }
-
-    inline T& operator * () {
-        return ptr_->value;
-    }
-
-//    inline T* operator -> () {
-//        return *(ptr_->value);
-//    }
-
-//    inline T& operator[](const int& rhs) {return ptr[rhs];}
-
 
     inline buffer_iterator<T>& operator ++ () {
         ptr_ = ptr_->next;
@@ -95,23 +92,37 @@ public:
     friend inline int operator + (const buffer_iterator<T>& it1, const buffer_iterator<T>& it2) {
         buffer_iterator<T> it = it1;
         int result1 = 0;
-        while (it != it2) {
+        while (!it.ptr_->prev->is_end) {
+            it--;
             result1++;
-            it++;
         }
 
         it = it2;
         int result2 = 0;
-        while (it != it1) {
+        while (!it.ptr_->prev->is_end) {
+            it--;
             result2++;
-            it++;
         }
 
-        return std::min(result1, result2);
+        return result1 + result2;
     }
 
     friend inline int operator - (buffer_iterator<T> it1, buffer_iterator<T> it2) {
-        return -(it1 + it2);
+        buffer_iterator<T> it = it1;
+        int result1 = 0;
+        while (!it.ptr_->prev->is_end) {
+            it--;
+            result1++;
+        }
+
+        it = it2;
+        int result2 = 0;
+        while (!it.ptr_->prev->is_end) {
+            it--;
+            result2++;
+        }
+
+        return result1 - result2;
     }
 
     friend inline buffer_iterator<T> operator + (const buffer_iterator<T>& it, const int& val) {
@@ -140,19 +151,13 @@ public:
 
     friend inline bool operator > (const buffer_iterator<T>& it1, const buffer_iterator<T>& it2) {
         buffer_iterator<T> it = it1;
-        int result1 = 0;
-        while (it != it2) {
-            result1++;
-            it++;
-        }
 
-        it = it2;
-        int result2 = 0;
-        while (it != it1) {
-            result2++;
+        while (it != it2) {
+            if (it.ptr_->is_end)
+                return true;
             it++;
         }
-        return result2 > result1;
+        return false;
     }
 
     friend inline bool operator >= (const buffer_iterator<T>& it1, const buffer_iterator<T>& it2) {
@@ -161,6 +166,10 @@ public:
 
     friend inline bool operator < (const buffer_iterator<T>& it1, const buffer_iterator<T>& it2) {
         return it2 > it1;
+    }
+
+    friend inline bool operator <= (const buffer_iterator<T>& it1, const buffer_iterator<T>& it2) {
+        return it2 > it1 || it2 == it1;
     }
 
 private:

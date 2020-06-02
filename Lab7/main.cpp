@@ -32,4 +32,8 @@ int main() {
     buffer.print_all();
 
     std::cout << *std::find(buffer.begin(), buffer.end(), 5) << std::endl;
+
+    std::cout << *(buffer.end() - 2) << std::endl;
+    std::cout << *(buffer.begin() + 1) << std::endl;
+    std::cout << buffer[buffer.begin() + buffer.end() - 1] << std::endl;
 }
