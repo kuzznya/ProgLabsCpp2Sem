@@ -1,9 +1,9 @@
 #include "Cube.h"
 
 std::array<Color, 6> defaultColors =
-        {Color::WHITE, Color::YELLOW,  // UP, DOWN
-         Color::GREEN,Color::BLUE,     // FRONT, DOWN
-         Color::ORANGE, Color::RED
+        {Color::WHITE, Color::YELLOW,   // UP, DOWN
+         Color::GREEN,Color::BLUE,      // FRONT, BACK
+         Color::ORANGE, Color::RED      // LEFT, RIGHT
 };   // LEFT, RIGHT
 
 Cube::Cube() {

@@ -1,22 +1,28 @@
 #include "CubeView.h"
 
-const double zCube = -35.0;
+#include <iostream>
 
 CubeView::CubeView(Cube& cube)
 : cube(cube) {}
 
 void CubeView::render() {
-    glPushMatrix();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glPushMatrix();
     glColor3f(1.0, 0.0, 0.0);
-    glTranslated(0, 0, zCube);
+
+    glTranslated(0, 0, zDistance);
+
     glRotatef(xCam, 1, 0, 0);
     glRotatef(yCam, 0, 1, 0);
+
     glTranslated(cubeSize / -2.0, cubeSize / -2.0, cubeSize / -2.0);
 
     renderCube();
 
     glPopMatrix();
+
+    glFlush();
     glutSwapBuffers();
 }
 
@@ -30,11 +36,49 @@ void CubeView::onResize(unsigned w, unsigned h) {
     glLoadIdentity();
 }
 
+void CubeView::incCamX() {
+    xCam += 3;
+    if (xCam >= 360)
+        xCam -= 360;
+    glutPostRedisplay();
+}
+
+void CubeView::decCamX() {
+    xCam -= 3;
+    if (xCam < 0)
+        xCam += 360;
+    glutPostRedisplay();
+}
+
+void CubeView::incCamY() {
+    yCam += 3;
+    if (yCam >= 360)
+        yCam -= 360;
+    glutPostRedisplay();
+}
+
+void CubeView::decCamY() {
+    yCam -= 3;
+    if (yCam < 0)
+        yCam += 360;
+    glutPostRedisplay();
+}
+
+void CubeView::zoomIn() {
+    zDistance += 3;
+    glutPostRedisplay();
+}
+
+void CubeView::zoomOut() {
+    zDistance -= 3;
+    glutPostRedisplay();
+}
+
 void CubeView::renderCube() {
     for (int i = 0; i < 3; i++)
         for (int j = 0; j < 3; j++)
             for (int k = 0; k < 3; k++)
-                    renderSmallCube(cube.getSmallCube(i, j, k), cubeSize / 3.0 * i, cubeSize / 3.0 * j, cubeSize / 3.0 * k, cubeSize / 3.0 * 0.98);
+                    renderSmallCube(cube.getSmallCube(i, j, k), cubeSize / 3.0 * i, cubeSize / 3.0 * j, cubeSize / 3.0 * k, cubeSize / 3.0 * 0.95);
 }
 
 void CubeView::renderSmallCube(const SmallCube& smallCube, double x, double y, double z, double size) {
@@ -68,7 +112,7 @@ void CubeView::renderSmallCube(const SmallCube& smallCube, double x, double y, d
     glVertex3f(0, 0, 0);
     glVertex3f(size, 0, 0);
 
-    // сзади
+    // BACK
     rgb = getColorRGB(smallCube.getColor(Side::BACK));
     glColor3ubv(rgb.get());
     glVertex3f(size, size, 0);
@@ -76,7 +120,7 @@ void CubeView::renderSmallCube(const SmallCube& smallCube, double x, double y, d
     glVertex3f(0, size, size);
     glVertex3f(size, size, size);
 
-    // слева
+    // LEFT
     rgb = getColorRGB(smallCube.getColor(Side::LEFT));
     glColor3ubv(rgb.get());
     glVertex3f(0, size, size);
@@ -84,7 +128,7 @@ void CubeView::renderSmallCube(const SmallCube& smallCube, double x, double y, d
     glVertex3f(0, 0, 0);
     glVertex3f(0, 0, size);
 
-    // справа
+    // RIGHT
     rgb = getColorRGB(smallCube.getColor(Side::RIGHT));
     glColor3ubv(rgb.get());
     glVertex3f(size, size, 0);

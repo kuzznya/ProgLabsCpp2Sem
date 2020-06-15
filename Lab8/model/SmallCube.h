@@ -20,5 +20,5 @@ public:
 
 private:
     // UP, DOWN, FRONT, BACK, LEFT, RIGHT
-    std::array<Color, 6> sidesColors;
+    std::array<Color, 6> sidesColors {BLACK, BLACK, BLACK, BLACK, BLACK, BLACK};
 };

@@ -4,7 +4,7 @@ CubeController::CubeController()
 : service(cube), view(cube) {}
 
 void CubeController::start() {
-    sf::Window window(sf::VideoMode(800, 600), "Rubik's cube");
+    sf::Window window(sf::VideoMode(800, 600), "Rubik's cube", sf::Style::Default, sf::ContextSettings(GLUT_DEPTH));
 
     // Set color and depth clear value
     glClearDepth(1.f);
@@ -23,22 +23,28 @@ void CubeController::start() {
 
     while (window.isOpen())
     {
-        // check all the window's events that were triggered since the last iteration of the loop
         sf::Event event = sf::Event();
         while (window.pollEvent(event))
         {
-            // "close requested" event: we close the window
             if (event.type == sf::Event::Closed)
                 window.close();
-            if (event.type == sf::Event::Resized)
+            else if (event.type == sf::Event::Resized)
                 view.onResize(event.size.width, event.size.height);
+            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right)
+                view.decCamY();
+            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left)
+                view.incCamY();
+            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Up)
+                view.incCamX();
+            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Down)
+                view.decCamX();
+            else if (event.type == sf::Event::MouseWheelScrolled && event.mouseWheelScroll.delta > 0)
+                view.zoomIn();
+            else if (event.type == sf::Event::MouseWheelScrolled && event.mouseWheelScroll.delta < 0)
+                view.zoomOut();
         }
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-
         view.render();
         window.display();
     }
 }
+

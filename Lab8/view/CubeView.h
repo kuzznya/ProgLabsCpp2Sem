@@ -13,9 +13,18 @@ public:
     CubeView(Cube& cube);
     void render();
     void onResize(unsigned w, unsigned h);
+
+    void incCamX();
+    void decCamX();
+    void incCamY();
+    void decCamY();
+
+    void zoomIn();
+    void zoomOut();
 private:
     const Cube& cube;
-    int xCam = 20, yCam = 20, zCam = 0;
+    int xCam = 30, yCam = 30;
+    int zDistance = -25;
     int cubeSize = 12;
 
     void renderCube();

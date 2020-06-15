@@ -14,6 +14,8 @@ uint getColorValue(Color color) {
             return 0x00FF00;
         case YELLOW:
             return 0xFFFF00;
+        case BLACK:
+            return 0x000000;
     }
 }
 
@@ -60,5 +62,7 @@ char getColorLetter(Color color) {
             return 'g';
         case YELLOW:
             return 'y';
+        case BLACK:
+            throw InvalidColorException();
     }
 }

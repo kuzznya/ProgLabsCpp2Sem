@@ -12,7 +12,8 @@ enum Color {
     ORANGE,
     BLUE,
     GREEN,
-    YELLOW
+    YELLOW,
+    BLACK
 };
 
 class InvalidColorException : std::exception {
