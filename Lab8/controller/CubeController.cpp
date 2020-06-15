@@ -23,13 +23,16 @@ void CubeController::start() {
 
     while (window.isOpen())
     {
+        bool actionChanged = false;
         sf::Event event = sf::Event();
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+
             else if (event.type == sf::Event::Resized)
                 view.onResize(event.size.width, event.size.height);
+
             else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right)
                 view.decCamY();
             else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left)
@@ -42,8 +45,29 @@ void CubeController::start() {
                 view.zoomIn();
             else if (event.type == sf::Event::MouseWheelScrolled && event.mouseWheelScroll.delta < 0)
                 view.zoomOut();
+
+            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Z)
+                cube.shuffle();
+            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R)
+                cube.reset();
+
+            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::I && view.actionFinished())
+                service.rotate(RD_UP, event.key.control ? MINUS : PLUS), actionChanged = true;
+            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::K && view.actionFinished())
+                service.rotate(RD_DOWN, event.key.control ? MINUS : PLUS), actionChanged = true;
+            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::U && view.actionFinished())
+                service.rotate(RD_FRONT, event.key.control ? MINUS : PLUS), actionChanged = true;
+            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::O && view.actionFinished())
+                service.rotate(RD_BACK, event.key.control ? MINUS : PLUS), actionChanged = true;
+            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::J && view.actionFinished())
+                service.rotate(RD_LEFT, event.key.control ? MINUS : PLUS), actionChanged = true;
+            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::L && view.actionFinished())
+                service.rotate(RD_RIGHT, event.key.control ? MINUS : PLUS), actionChanged = true;
         }
-        view.render();
+        if (actionChanged)
+            view.render(service.lastAction().first, service.lastAction().second);
+        else
+            view.render();
         window.display();
     }
 }

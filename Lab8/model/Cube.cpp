@@ -54,37 +54,39 @@ void Cube::rotate(RotationDirection rd, RotationSign sign) {
                         cubes[i][j][k] = tmp[j][k];
                     }
                 break;
+            case RD_NONE:
+                break;
         }
     }
 }
 
 void Cube::reset() {
-    // верх
+    // UP
     for (size_t i = 0; i < 3; i++)
         for (size_t j = 0; j < 3; j++)
             cubes[i][j][2].setColor(Side::UP, defaultColors[Side::UP]);
 
-    // низ
+    // DOWN
     for (size_t i = 0; i < 3; i++)
         for (size_t j = 0; j < 3; j++)
             cubes[i][j][0].setColor(Side::DOWN, defaultColors[Side::DOWN]);
 
-    // спереди
+    // FRONT
     for (size_t k = 0; k < 3; k++)
         for (size_t j = 0; j < 3; j++)
             cubes[j][0][k].setColor(Side::FRONT, defaultColors[Side::FRONT]);
 
-    // сзади
+    // BACK
     for (size_t k = 0; k < 3; k++)
         for (size_t j = 0; j < 3; j++)
             cubes[j][2][k].setColor(Side::BACK, defaultColors[Side::BACK]);
 
-    // слева
+    // LEFT
     for (size_t i = 0; i < 3; i++)
         for (size_t k = 0; k < 3; k++)
             cubes[0][k][i].setColor(Side::LEFT, defaultColors[Side::LEFT]);
 
-    // справа
+    // RIGHT
     for (size_t i = 0; i < 3; i++)
         for (size_t k = 0; k < 3; k++)
             cubes[2][k][i].setColor(Side::RIGHT, defaultColors[Side::RIGHT]);
@@ -96,7 +98,7 @@ void Cube::shuffle() {
         rotate(static_cast<RotationDirection>(rand() % 6), RotationSign::PLUS);
 }
 
-const SmallCube& Cube::getSmallCube(unsigned i, unsigned j, unsigned k) const {
+const SmallCube& Cube::smallCube(unsigned i, unsigned j, unsigned k) const {
     if (i > 2 || j > 2 || k > 2)
         throw InvalidIndexException();
     return cubes[i][j][k];
@@ -105,32 +107,32 @@ const SmallCube& Cube::getSmallCube(unsigned i, unsigned j, unsigned k) const {
 std::array<std::array<Color, 9>, 6> Cube::sidesColors() const {
     std::array<std::array<Color, 9>, 6> sides {};
     
-    //верх
+    // UP
     for (int j = 2; j >= 0; j--)
         for (int i = 0; i < 3; i++)
             sides[0][(2 - j) * 3 + i] = cubes[i][j][2].getColor(Side::UP);
 
-    // слева
+    // LEFT
     for (int i = 2; i >= 0; i--)
         for (int k = 2; k >= 0; k--)
             sides[1][(2 - i) * 3 + (2 - k)] = cubes[0][k][i].getColor(Side::LEFT);
 
-    // спереди
+    // FRONT
     for (int k = 2; k >= 0; k--)
         for (int j = 0; j < 3; j++)
             sides[2][(2 - k) * 3 + j] = cubes[j][0][k].getColor(Side::FRONT);
 
-    // справа
+    // RIGHT
     for (int i = 2; i >= 0; i--)
         for (int k = 0; k < 3; k++)
             sides[3][(2 - i) * 3 + k] = cubes[2][k][i].getColor(Side::RIGHT);
 
-    // сзади
+    // BACK
     for (int k = 2; k >= 0; k--)
         for (int j = 2; j >= 0; j--)
             sides[4][(2 - k) * 3 + (2 - j)] = cubes[j][2][k].getColor(Side::BACK);
 
-    // низ
+    // DOWN
     for (int j = 0; j < 3; j++)
         for (int i = 0; i < 3; i++)
             sides[5][j * 3 + i] = cubes[i][j][0].getColor(Side::DOWN);
@@ -148,4 +150,38 @@ std::array<std::array<char, 9>, 6> Cube::sidesColorLetters() const {
             letters[i][j] = getColorLetter(sides[i][j]);
 
     return letters;
+}
+
+bool Cube::solved() {
+    // UP
+    for (size_t i = 0; i < 3; i++)
+        for (size_t j = 0; j < 3; j++)
+            if (cubes[i][j][2].getColor(Side::UP) != defaultColors[Side::UP]) return false;
+
+    // DOWN
+    for (size_t i = 0; i < 3; i++)
+        for (size_t j = 0; j < 3; j++)
+            if (cubes[i][j][0].getColor(Side::DOWN) != defaultColors[Side::DOWN]) return false;
+
+    // FRONT
+    for (size_t k = 0; k < 3; k++)
+        for (size_t j = 0; j < 3; j++)
+            if (cubes[j][0][k].getColor(Side::FRONT) != defaultColors[Side::FRONT]) return false;
+
+    // BACK
+    for (size_t k = 0; k < 3; k++)
+        for (size_t j = 0; j < 3; j++)
+            if (cubes[j][2][k].getColor(Side::BACK) != defaultColors[Side::BACK]) return false;
+
+    // LEFT
+    for (size_t i = 0; i < 3; i++)
+        for (size_t k = 0; k < 3; k++)
+            if (cubes[0][k][i].getColor(Side::LEFT) != defaultColors[Side::LEFT]) return false;
+
+    // RIGHT
+    for (size_t i = 0; i < 3; i++)
+        for (size_t k = 0; k < 3; k++)
+            if (cubes[2][k][i].getColor(Side::RIGHT) != defaultColors[Side::RIGHT]) return false;
+
+    return true;
 }

@@ -1,11 +1,15 @@
 #include "CubeView.h"
 
 #include <iostream>
+#include <unistd.h>
 
 CubeView::CubeView(Cube& cube)
 : cube(cube) {}
 
 void CubeView::render() {
+    if (actionAngle > 90)
+        currentAction.first = RD_NONE;
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glPushMatrix();
@@ -16,6 +20,10 @@ void CubeView::render() {
     glRotatef(xCam, 1, 0, 0);
     glRotatef(yCam, 0, 1, 0);
 
+    glRotatef(90.f, 1, 0, 0);
+    glRotatef(180.f, 0, 1, 0);
+    glRotatef(180.f, 0, 0, 1);
+
     glTranslated(cubeSize / -2.0, cubeSize / -2.0, cubeSize / -2.0);
 
     renderCube();
@@ -24,6 +32,12 @@ void CubeView::render() {
 
     glFlush();
     glutSwapBuffers();
+}
+
+void CubeView::render(RotationDirection rd, RotationSign sign) {
+    actionAngle = 0;
+    currentAction = std::make_pair(rd, sign);
+    render();
 }
 
 void CubeView::onResize(unsigned w, unsigned h) {
@@ -37,48 +51,114 @@ void CubeView::onResize(unsigned w, unsigned h) {
 }
 
 void CubeView::incCamX() {
-    xCam += 3;
+    if (xCam < 87 || xCam > 267)
+        xCam += 3;
     if (xCam >= 360)
         xCam -= 360;
-    glutPostRedisplay();
 }
 
 void CubeView::decCamX() {
-    xCam -= 3;
+    if (xCam < 93 || xCam > 273)
+        xCam -= 3;
     if (xCam < 0)
         xCam += 360;
-    glutPostRedisplay();
 }
 
 void CubeView::incCamY() {
     yCam += 3;
     if (yCam >= 360)
         yCam -= 360;
-    glutPostRedisplay();
 }
 
 void CubeView::decCamY() {
     yCam -= 3;
     if (yCam < 0)
         yCam += 360;
-    glutPostRedisplay();
 }
 
 void CubeView::zoomIn() {
-    zDistance += 3;
-    glutPostRedisplay();
+    if (zDistance < -15)
+        zDistance += 3;
 }
 
 void CubeView::zoomOut() {
-    zDistance -= 3;
-    glutPostRedisplay();
+    if (zDistance > -70)
+        zDistance -= 3;
+}
+
+bool CubeView::actionFinished() {
+    return currentAction.first == RD_NONE;
 }
 
 void CubeView::renderCube() {
+    std::vector<std::vector<std::vector<bool>>> rendered(3, std::vector(3, std::vector(3, false)));
+
+    int i, j, k;
+    glPushMatrix();
+    switch (currentAction.first) {
+        case RD_DOWN:
+        case RD_UP:
+            k = (currentAction.first & 1) * 2;
+            for (i = 0; i < 3; i++)
+                for (j = 0; j < 3; j++)
+                    rendered[i][j][k] = true;
+
+            glTranslated(cubeSize / 2.0, cubeSize / 2.0, 0);
+
+            glRotatef(90 * (currentAction.second == MINUS ? -1 : 1), 0, 0, 1);
+            glRotatef(actionAngle++ * (currentAction.second == MINUS ? 1 : -1), 0, 0, 1);
+
+            glTranslated(-cubeSize / 2.0, -cubeSize / 2.0, 0);
+            for (i = 0; i < 3; i++)
+                for (j = 0; j < 3; j++)
+                    renderSmallCube(cube.smallCube(i, j, k), cubeSize / 3.0 * i, cubeSize / 3.0 * j, cubeSize / 3.0 * k, cubeSize / 3.0 * 0.97);
+            break;
+        case RD_LEFT:
+        case RD_RIGHT:
+            j = (currentAction.first & 1) * 2;
+            for (i = 0; i < 3; i++)
+                for (k = 0; k < 3; k++)
+                    rendered[i][j][k] = true;
+
+            glTranslated(cubeSize / 2.0, 0, cubeSize / 2.0);
+
+            glRotatef(90 * (currentAction.second == MINUS ? 1 : -1), 0, 1, 0);
+            glRotatef(actionAngle++ * (currentAction.second == MINUS ? -1 : 1), 0, 1, 0);
+
+            glTranslated(-cubeSize / 2.0, 0, -cubeSize / 2.0);
+            for (i = 0; i < 3; i++)
+                for (k = 0; k < 3; k++)
+                    renderSmallCube(cube.smallCube(i, j, k), cubeSize / 3.0 * i, cubeSize / 3.0 * j, cubeSize / 3.0 * k, cubeSize / 3.0 * 0.97);
+            break;
+        case RD_FRONT:
+        case RD_BACK:
+            i = (currentAction.first & 1) * 2;
+            for (j = 0; j < 3; j++)
+                for (k = 0; k < 3; k++)
+                    rendered[i][j][k] = true;
+
+            glTranslated(0, cubeSize / 2.0, cubeSize / 2.0);
+
+            glRotatef(90 * (currentAction.second == MINUS ? -1 : 1), 1, 0, 0);
+            glRotatef(actionAngle++ * (currentAction.second == MINUS ? 1 : -1), 1, 0, 0);
+
+            glTranslated(0, -cubeSize / 2.0, -cubeSize / 2.0);
+            for (j = 0; j < 3; j++)
+                for (k = 0; k < 3; k++)
+                    renderSmallCube(cube.smallCube(i, j, k), cubeSize / 3.0 * i, cubeSize / 3.0 * j, cubeSize / 3.0 * k, cubeSize / 3.0 * 0.97);
+        case RD_NONE:
+            break;
+    }
+    glPopMatrix();
+
     for (int i = 0; i < 3; i++)
         for (int j = 0; j < 3; j++)
             for (int k = 0; k < 3; k++)
-                    renderSmallCube(cube.getSmallCube(i, j, k), cubeSize / 3.0 * i, cubeSize / 3.0 * j, cubeSize / 3.0 * k, cubeSize / 3.0 * 0.95);
+                if(!rendered[i][j][k])
+                    renderSmallCube(cube.smallCube(i, j, k), cubeSize / 3.0 * i, cubeSize / 3.0 * j, cubeSize / 3.0 * k, cubeSize / 3.0 * 0.97);
+
+    if (!actionFinished())
+        usleep(1000);
 }
 
 void CubeView::renderSmallCube(const SmallCube& smallCube, double x, double y, double z, double size) {

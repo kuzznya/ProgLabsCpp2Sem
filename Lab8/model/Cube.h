@@ -13,7 +13,8 @@ enum RotationDirection {
     RD_LEFT = 2,
     RD_RIGHT = 3,
     RD_FRONT = 4,
-    RD_BACK = 5
+    RD_BACK = 5,
+    RD_NONE = 6
 };
 
 enum RotationSign {
@@ -30,10 +31,12 @@ public:
     void reset();
     void shuffle();
 
-    const SmallCube& getSmallCube(unsigned i, unsigned j, unsigned k) const;
+    const SmallCube& smallCube(unsigned i, unsigned j, unsigned k) const;
 
     std::array<std::array<Color, 9>, 6> sidesColors() const;
     std::array<std::array<char, 9>, 6> sidesColorLetters() const;
+
+    bool solved();
 
 private:
     std::array<std::array<std::array<SmallCube, 3>, 3>, 3> cubes {};
