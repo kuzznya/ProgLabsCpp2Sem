@@ -4,7 +4,7 @@ CubeController::CubeController()
 : service(cube), view(cube) {}
 
 void CubeController::start() {
-    sf::Window window(sf::VideoMode(800, 600), "Rubik's cube", sf::Style::Default, sf::ContextSettings(GLUT_DEPTH));
+    sf::Window window(sf::VideoMode(800, 600), "Rubik's cube", sf::Style::Default, sf::ContextSettings(GLUT_DEPTH, 0, 4));
 
     // Set color and depth clear value
     glClearDepth(1.f);
@@ -46,6 +46,11 @@ void CubeController::start() {
                 view.zoomIn();
             else if (event.type == sf::Event::MouseWheelScrolled && event.mouseWheelScroll.delta < 0)
                 view.zoomOut();
+
+            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Comma)
+                view.decSpeed();
+            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Period)
+                view.incSpeed();
 
             else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Z)
                 cube.shuffle();

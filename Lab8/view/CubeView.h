@@ -23,11 +23,15 @@ public:
     void zoomIn();
     void zoomOut();
 
+    void incSpeed();
+    void decSpeed();
+
     bool actionFinished();
 private:
     const Cube& cube;
     int xCam = 30, yCam = 30;
     int zDistance = -25;
+    int turnDelay = 1500;
     int cubeSize = 12;
 
     std::pair<RotationDirection, RotationSign> currentAction {RD_NONE, PLUS};

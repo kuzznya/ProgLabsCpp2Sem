@@ -32,6 +32,9 @@ void CubeView::render() {
 
     glFlush();
     glutSwapBuffers();
+
+    if (!actionFinished())
+        usleep(turnDelay);
 }
 
 void CubeView::render(RotationDirection rd, RotationSign sign) {
@@ -86,6 +89,16 @@ void CubeView::zoomOut() {
         zDistance -= 3;
 }
 
+void CubeView::incSpeed() {
+    if (turnDelay >= 500)
+        turnDelay -= 500;
+}
+
+void CubeView::decSpeed() {
+    if (turnDelay <= 19500)
+        turnDelay += 500;
+}
+
 bool CubeView::actionFinished() {
     return currentAction.first == RD_NONE;
 }
@@ -106,7 +119,8 @@ void CubeView::renderCube() {
             glTranslated(cubeSize / 2.0, cubeSize / 2.0, 0);
 
             glRotatef(90 * (currentAction.second == MINUS ? -1 : 1), 0, 0, 1);
-            glRotatef(actionAngle++ * (currentAction.second == MINUS ? 1 : -1), 0, 0, 1);
+            glRotatef((actionAngle + 5) * (currentAction.second == MINUS ? 1 : -1), 0, 0, 1);
+            actionAngle += 5;
 
             glTranslated(-cubeSize / 2.0, -cubeSize / 2.0, 0);
             for (i = 0; i < 3; i++)
@@ -123,7 +137,8 @@ void CubeView::renderCube() {
             glTranslated(cubeSize / 2.0, 0, cubeSize / 2.0);
 
             glRotatef(90 * (currentAction.second == MINUS ? 1 : -1), 0, 1, 0);
-            glRotatef(actionAngle++ * (currentAction.second == MINUS ? -1 : 1), 0, 1, 0);
+            glRotatef((actionAngle + 5) * (currentAction.second == MINUS ? -1 : 1), 0, 1, 0);
+            actionAngle += 5;
 
             glTranslated(-cubeSize / 2.0, 0, -cubeSize / 2.0);
             for (i = 0; i < 3; i++)
@@ -140,7 +155,8 @@ void CubeView::renderCube() {
             glTranslated(0, cubeSize / 2.0, cubeSize / 2.0);
 
             glRotatef(90 * (currentAction.second == MINUS ? -1 : 1), 1, 0, 0);
-            glRotatef(actionAngle++ * (currentAction.second == MINUS ? 1 : -1), 1, 0, 0);
+            glRotatef((actionAngle + 5) * (currentAction.second == MINUS ? 1 : -1), 1, 0, 0);
+            actionAngle += 5;
 
             glTranslated(0, -cubeSize / 2.0, -cubeSize / 2.0);
             for (j = 0; j < 3; j++)
@@ -156,9 +172,6 @@ void CubeView::renderCube() {
             for (int k = 0; k < 3; k++)
                 if(!rendered[i][j][k])
                     renderSmallCube(cube.smallCube(i, j, k), cubeSize / 3.0 * i, cubeSize / 3.0 * j, cubeSize / 3.0 * k, cubeSize / 3.0 * 0.97);
-
-    if (!actionFinished())
-        usleep(100);
 }
 
 void CubeView::renderSmallCube(const SmallCube& smallCube, double x, double y, double z, double size) {
