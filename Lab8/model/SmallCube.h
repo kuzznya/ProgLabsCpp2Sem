@@ -16,7 +16,7 @@ public:
 
     void setColor(Side side, char color);
     void setColor(Side side, Color color);
-    Color getColor(Side side);
+    Color getColor(Side side) const;
 
 private:
     // UP, DOWN, FRONT, BACK, LEFT, RIGHT

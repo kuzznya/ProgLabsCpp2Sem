@@ -32,6 +32,6 @@ void SmallCube::setColor(Side side, Color color) {
     sidesColors[side] = color;
 }
 
-Color SmallCube::getColor(Side side) {
+Color SmallCube::getColor(Side side) const {
     return sidesColors[side];
 }

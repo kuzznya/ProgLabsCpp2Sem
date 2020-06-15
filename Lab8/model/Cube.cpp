@@ -96,7 +96,13 @@ void Cube::shuffle() {
         rotate(static_cast<RotationDirection>(rand() % 6), RotationSign::PLUS);
 }
 
-std::array<std::array<Color, 9>, 6> Cube::sidesColors() {
+const SmallCube& Cube::getSmallCube(unsigned i, unsigned j, unsigned k) const {
+    if (i > 2 || j > 2 || k > 2)
+        throw InvalidIndexException();
+    return cubes[i][j][k];
+}
+
+std::array<std::array<Color, 9>, 6> Cube::sidesColors() const {
     std::array<std::array<Color, 9>, 6> sides {};
     
     //верх
@@ -132,7 +138,7 @@ std::array<std::array<Color, 9>, 6> Cube::sidesColors() {
     return sides;
 }
 
-std::array<std::array<char, 9>, 6> Cube::sidesColorLetters() {
+std::array<std::array<char, 9>, 6> Cube::sidesColorLetters() const {
     std::array<std::array<Color, 9>, 6> sides = sidesColors();
 
     std::array<std::array<char, 9>, 6> letters {};

@@ -5,6 +5,7 @@
 #include <array>
 #include <vector>
 #include <ctime>
+#include <exception>
 
 enum RotationDirection {
     RD_DOWN = 0,
@@ -29,16 +30,17 @@ public:
     void reset();
     void shuffle();
 
-    std::array<std::array<Color, 9>, 6> sidesColors();
-    std::array<std::array<char, 9>, 6> sidesColorLetters();
+    const SmallCube& getSmallCube(unsigned i, unsigned j, unsigned k) const;
+
+    std::array<std::array<Color, 9>, 6> sidesColors() const;
+    std::array<std::array<char, 9>, 6> sidesColorLetters() const;
 
 private:
     std::array<std::array<std::array<SmallCube, 3>, 3>, 3> cubes {};
+};
 
-//    std::array<int, 6> angles;
-
-    int currentSide = -1;
-
-//    std::array<std::array<std::array<bool, 3>, 3>, 3> isCorrect;
-//    std::array<std::array<SmallCube, 3>, 3> tmp;
+class InvalidIndexException : std::exception {
+    const char* what() const noexcept override  {
+        return "Invalid index\n";
+    }
 };
