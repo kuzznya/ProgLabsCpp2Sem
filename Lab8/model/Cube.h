@@ -34,7 +34,7 @@ public:
     const SmallCube& smallCube(unsigned i, unsigned j, unsigned k) const;
 
     std::array<std::array<Color, 9>, 6> sidesColors() const;
-    std::array<std::array<char, 9>, 6> sidesColorLetters() const;
+    const std::array<std::array<uchar, 9>, 6> sidesColorLetters() const;
 
     bool solved();
 

@@ -3,6 +3,8 @@
 #include "../model/Cube.h"
 #include "CubeSolver.h"
 #include <string>
+#include <deque>
+#include <algorithm>
 
 class CubeService {
 public:
@@ -11,13 +13,12 @@ public:
     std::pair<RotationDirection, RotationSign> lastAction();
     void rotate(RotationDirection rd, RotationSign sign);
 
-//    void findSolution();
-//    void solution_step();
-//    void solved();
+    void findSolution();
+    void solutionStep();
 
 private:
     Cube& cube;
     RotationDirection lastRD = RD_NONE;
     RotationSign lastSign = PLUS;
-    std::string solution;
+    std::deque<std::pair<RotationDirection, RotationSign>> solution;
 };

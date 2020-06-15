@@ -140,10 +140,10 @@ std::array<std::array<Color, 9>, 6> Cube::sidesColors() const {
     return sides;
 }
 
-std::array<std::array<char, 9>, 6> Cube::sidesColorLetters() const {
+const std::array<std::array<uchar, 9>, 6> Cube::sidesColorLetters() const {
     std::array<std::array<Color, 9>, 6> sides = sidesColors();
 
-    std::array<std::array<char, 9>, 6> letters {};
+    std::array<std::array<uchar, 9>, 6> letters {};
 
     for (int i = 0; i < sides.size(); i++)
         for (int j = 0; j < sides[i].size(); j++)

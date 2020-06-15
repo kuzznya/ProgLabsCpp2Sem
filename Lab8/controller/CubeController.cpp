@@ -21,6 +21,7 @@ void CubeController::start() {
     glLoadIdentity();
     gluPerspective(90.f, 1.f, 1.f, 500.f);
 
+    bool autoSolve = false;
     while (window.isOpen())
     {
         bool actionChanged = false;
@@ -63,6 +64,19 @@ void CubeController::start() {
                 service.rotate(RD_LEFT, event.key.control ? MINUS : PLUS), actionChanged = true;
             else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::L && view.actionFinished())
                 service.rotate(RD_RIGHT, event.key.control ? MINUS : PLUS), actionChanged = true;
+
+            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::M && view.actionFinished())
+                service.solutionStep(), actionChanged = true;
+            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::S && view.actionFinished())
+                autoSolve = true;
+        }
+        if (autoSolve) {
+            if (cube.solved())
+                autoSolve = false;
+            if (view.actionFinished()) {
+                service.solutionStep();
+                actionChanged = true;
+            }
         }
         if (actionChanged)
             view.render(service.lastAction().first, service.lastAction().second);

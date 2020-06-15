@@ -158,7 +158,7 @@ void CubeView::renderCube() {
                     renderSmallCube(cube.smallCube(i, j, k), cubeSize / 3.0 * i, cubeSize / 3.0 * j, cubeSize / 3.0 * k, cubeSize / 3.0 * 0.97);
 
     if (!actionFinished())
-        usleep(1000);
+        usleep(100);
 }
 
 void CubeView::renderSmallCube(const SmallCube& smallCube, double x, double y, double z, double size) {
