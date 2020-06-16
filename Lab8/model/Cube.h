@@ -2,6 +2,7 @@
 
 #include "SmallCube.h"
 #include "Side.h"
+#include "../service/CubeSolver.h"
 #include <array>
 #include <vector>
 #include <ctime>
@@ -25,6 +26,7 @@ enum RotationSign {
 class Cube {
 public:
     Cube();
+    Cube(std::array<std::array<uchar, 9>, 6> sides);
     ~Cube() = default;
 
     void rotate(RotationDirection rd, RotationSign sign);
@@ -34,7 +36,10 @@ public:
     const SmallCube& smallCube(unsigned i, unsigned j, unsigned k) const;
 
     std::array<std::array<Color, 9>, 6> sidesColors() const;
-    const std::array<std::array<uchar, 9>, 6> sidesColorLetters() const;
+    std::array<std::array<uchar, 9>, 6> sidesColorLetters() const;
+
+    void load(std::array<std::array<uchar, 9>, 6> sides);
+    void check();
 
     bool solved();
 
@@ -45,5 +50,11 @@ private:
 class InvalidIndexException : std::exception {
     const char* what() const noexcept override  {
         return "Invalid index\n";
+    }
+};
+
+class InvalidStateException : std::exception {
+    const char* what() const noexcept override {
+        return "Invalid cube state";
     }
 };

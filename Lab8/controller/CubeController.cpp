@@ -72,8 +72,13 @@ void CubeController::start() {
 
             else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::M && view.actionFinished())
                 service.solutionStep(), actionChanged = true;
-            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::S && view.actionFinished())
+            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::S && !event.key.control && view.actionFinished())
                 autoSolve = true;
+
+            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::S && event.key.control)
+                service.writeToFile("data.txt");
+            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::N && event.key.control)
+                service.loadFromFile("data.txt");
         }
         if (autoSolve) {
             if (cube.solved())

@@ -10,6 +10,10 @@ Cube::Cube() {
     reset();
 }
 
+Cube::Cube(std::array<std::array<uchar, 9>, 6> sides) {
+    load(sides);
+}
+
 void Cube::rotate(RotationDirection rd, RotationSign sign) {
     int i, j, k;
     std::array<std::array<SmallCube, 3>, 3> tmp {};
@@ -140,7 +144,7 @@ std::array<std::array<Color, 9>, 6> Cube::sidesColors() const {
     return sides;
 }
 
-const std::array<std::array<uchar, 9>, 6> Cube::sidesColorLetters() const {
+std::array<std::array<uchar, 9>, 6> Cube::sidesColorLetters() const {
     std::array<std::array<Color, 9>, 6> sides = sidesColors();
 
     std::array<std::array<uchar, 9>, 6> letters {};
@@ -150,6 +154,50 @@ const std::array<std::array<uchar, 9>, 6> Cube::sidesColorLetters() const {
             letters[i][j] = getColorLetter(sides[i][j]);
 
     return letters;
+}
+
+void Cube::load(std::array<std::array<uchar, 9>, 6> sides) {
+    // UP
+    for (int j = 2; j >= 0; j--)
+        for (int i = 0; i < 3; i++)
+            cubes[i][j][2].setColor(Side::UP, sides[0][(2 - j) * 3 + i]);
+
+    // LEFT
+    for (int i = 2; i >= 0; i--)
+        for (int k = 2; k >= 0; k--)
+            cubes[0][k][i].setColor(Side::LEFT, sides[1][(2 - i) * 3 + (2 - k)]);
+
+    // FRONT
+    for (int k = 2; k >= 0; k--)
+        for (int j = 0; j < 3; j++)
+            cubes[j][0][k].setColor(Side::FRONT, sides[2][(2 - k) * 3 + j]);
+
+    // RIGHT
+    for (int i = 2; i >= 0; i--)
+        for (int k = 0; k < 3; k++)
+            cubes[2][k][i].setColor(Side::RIGHT, sides[3][(2 - i) * 3 + k]);
+
+    // BACK
+    for (int k = 2; k >= 0; k--)
+        for (int j = 2; j >= 0; j--)
+            cubes[j][2][k].setColor(Side::BACK, sides[4][(2 - k) * 3 + (2 - j)]);
+
+    // DOWN
+    for (int j = 0; j < 3; j++)
+        for (int i = 0; i < 3; i++)
+            cubes[i][j][0].setColor(Side::DOWN, sides[5][j * 3 + i]);
+
+    check();
+}
+
+void Cube::check() {
+    Rubik rubik;
+    std::array<std::array<uchar, 9>, 6> sides = sidesColorLetters();
+    rubik.readRubik(sides);
+    if (rubik.logicErrors() < 0)
+        throw InvalidStateException();
+    std::vector<uchar> solution;
+    rubik.solve(solution);
 }
 
 bool Cube::solved() {
